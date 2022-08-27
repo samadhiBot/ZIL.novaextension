@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<syntax name="zil">
+    <meta>
+        <name>Zil</name>
+        <type>structured</type>
+        <preferred-file-extension>zil</preferred-file-extension>
+    </meta>
+
+    <detectors>
+        <extension priority="1.0">zil</extension>
+    </detectors>
+
+    <indentation>
+        <increase>
+            <expression>^\s*&lt;(([^!/?]|%)(?!.+?([/%]&gt;|&lt;/.+?&gt;))|[%!]--\s*$)</expression>
+        </increase>
+        <decrease>
+            <expression>^\s*(&lt;/[^&gt;]+&gt;|--&gt;|--%&gt;)</expression>
+        </decrease>
+    </indentation>
+
+    <brackets>
+        <pair open="&lt;" close="&gt;" />
+        <pair open="(" close=")" />
+    </brackets>
+
+    <surrounding-pairs>
+        <pair open="&lt;" close="&gt;" />
+        <pair open="{" close="}" />
+        <pair open="[" close="]" />
+        <pair open="(" close=")" />
+        <pair open="&apos;" close="&apos;" />
+        <pair open="&quot;" close="&quot;" />
+        <pair open="`" close="`" />
+    </surrounding-pairs>
+
+    <scopes>
+        <!-- Comments -->
+        <scope name="zil.comment" spell-check="true">
+            <starts-with>
+                <expression>;?&quot;</expression>
+            </starts-with>
+            <ends-with>
+                <expression>&quot;</expression>
+            </ends-with>
+        </scope>
+
+        <!-- Forms -->
+        <include syntax="self" collection="zil.form" />
+
+        <!-- Values -->
+        <scope name="html.value.entity.numeric">
+            <expression>&amp;\#[0-9]+;</expression>
+        </scope>
+    </scopes>
+
+    <collections>
+        <!-- Elements -->
+        <collection name="zil.elements">
+            <scope name="zil.number">
+                <expression>(\d+)</expression>
+                <capture number="1" name="zil.value.number" />
+            </scope>
+
+            <scope name="zil.comment" spell-check="true">
+                <expression>;&quot;[^&quot;]*&quot;</expression>
+            </scope>
+
+            <scope name="zil.string" spell-check="true">
+                <expression>&quot;[^&quot;]*&quot;</expression>
+            </scope>
+
+            <scope name="zil.multiline.string" spell-check="true">
+                <starts-with>
+                    <expression>&quot;</expression>
+                </starts-with>
+                <ends-with>
+                    <expression>&quot;</expression>
+                </ends-with>
+                <subscopes>
+                    <expression>&quot;</expression>
+                </subscopes>
+            </scope>
+
+            <scope name="zil.global">
+                <expression>(,[A-Z_][A-Z0-9-?]+)</expression>
+                <capture number="1" name="zil.identifier.global" />
+            </scope>
+
+            <scope name="zil.local">
+                <expression>(\.[A-Z_][A-Z0-9-?]+)</expression>
+                <capture number="1" name="zil.identifier.local" />
+            </scope>
+
+            <scope name="zil.atom">
+                <expression>([A-Z_][A-Z0-9-?]+)</expression>
+                <capture number="1" name="zil.identifier.variable" />
+            </scope>
+
+            <scope name="zil.boolean">
+                <expression>T|&lt;&gt;</expression>
+            </scope>
+
+            <include syntax="self" collection="zil.form" />
+
+            <include syntax="self" collection="zil.list" />
+        </collection>
+
+        <!-- First element of a Form or List -->
+        <collection name="zil.first-element">
+            <scope name="zil.first-element.atom">
+                <expression>([A-Z=][A-Z0-9-=?]+)</expression>
+                <capture number="1" name="zil.identifier.method" />
+            </scope>
+        </collection>
+
+        <!-- Forms -->
+        <collection name="zil.form">
+            <scope name="zil.tag.form">
+                <starts-with>
+                    <expression>(&lt;)</expression>
+                    <capture number="1" name="zil.bracket" />
+                </starts-with>
+                <ends-with>
+                    <expression>(&gt;)</expression>
+                    <capture number="1" name="zil.bracket" />
+                </ends-with>
+                <subscopes anchored="true">
+                    <include syntax="self" collection="zil.first-element" />
+                    <include syntax="self" collection="zil.elements" optional="true" repeat="true" />
+                </subscopes>
+            </scope>
+        </collection>
+
+        <!-- Lists -->
+        <collection name="zil.list">
+            <scope name="zil.tag.list">
+                <starts-with>
+                    <expression>\(</expression>
+                </starts-with>
+                <ends-with>
+                    <expression>\)</expression>
+                </ends-with>
+                <subscopes anchored="true">
+                    <include syntax="self" collection="zil.first-element" optional="true" />
+                    <include syntax="self" collection="zil.elements" optional="true" repeat="true" />
+                </subscopes>
+            </scope>
+        </collection>
+    </collections>
+</syntax>
