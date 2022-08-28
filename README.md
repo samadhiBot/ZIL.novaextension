@@ -1,5 +1,5 @@
 # Zil for Nova
 
-**Zil for Nova** provides syntax highlighting for the Zil programming language.
+Provides syntax highlighting for the Zil programming language.
 
-![Zil source code from Zork 1](/Images/extension/actions.png "Zil source code")
+![Zil source code from Zork 1](https://raw.githubusercontent.com/samadhiBot/ZIL.novaextension/main/Images/actions/actions.png)

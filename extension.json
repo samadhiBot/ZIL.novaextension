@@ -1,8 +1,10 @@
 {
-  "identifier": "com.samadhiBot.Zil",
+  "identifier": "samadhiBot.Zil",
   "name": "Zil for Nova",
   "organization": "samadhiBot",
   "description": "Provides Nova syntax highlighting for the Zil programming language.",
-  "version": "1.0",
-  "categories": ["languages"]
+  "version": "0.1.0",
+  "categories": ["languages"],
+  "repository": "https://github.com/samadhiBot/ZIL.novaextension",
+  "bugs": "https://github.com/samadhiBot/ZIL.novaextension/issues"
 }
