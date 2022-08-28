@@ -46,18 +46,13 @@
         </scope>
 
         <!-- Forms -->
-        <include syntax="self" collection="zil.form" />
-
-        <!-- Values -->
-        <scope name="html.value.entity.numeric">
-            <expression>&amp;\#[0-9]+;</expression>
-        </scope>
+        <include syntax="self" collection="forms" />
     </scopes>
 
     <collections>
         <!-- Elements -->
-        <collection name="zil.elements">
-            <scope name="zil.number">
+        <collection name="elements">
+            <scope name="zil.value.number">
                 <expression>(\d+)</expression>
                 <capture number="1" name="zil.value.number" />
             </scope>
@@ -67,56 +62,48 @@
             </scope>
 
             <scope name="zil.string" spell-check="true">
-                <expression>&quot;[^&quot;]*&quot;</expression>
-            </scope>
-
-            <scope name="zil.multiline.string" spell-check="true">
                 <starts-with>
                     <expression>&quot;</expression>
                 </starts-with>
                 <ends-with>
-                    <expression>&quot;</expression>
+                    <expression>[^\\]&quot;</expression>
                 </ends-with>
-                <subscopes>
-                    <expression>&quot;</expression>
-                </subscopes>
             </scope>
 
-            <scope name="zil.global">
-                <expression>(,[A-Z_][A-Z0-9-?]+)</expression>
+            <scope name="zil.identifier.global">
+                <expression>(,[A-Z0-9-=?]+)</expression>
                 <capture number="1" name="zil.identifier.global" />
             </scope>
 
-            <scope name="zil.local">
-                <expression>(\.[A-Z_][A-Z0-9-?]+)</expression>
+            <scope name="zil.identifier.variable">
+                <expression>(\.[A-Z0-9-=?]+)</expression>
                 <capture number="1" name="zil.identifier.local" />
             </scope>
 
-            <scope name="zil.atom">
-                <expression>([A-Z_][A-Z0-9-?]+)</expression>
-                <capture number="1" name="zil.identifier.variable" />
+            <scope name="zil.value.symbols">
+                <expression>([A-Z0-9-=?]+)</expression>
+                <capture number="1" name="zil.value.entity" />
             </scope>
 
-            <scope name="zil.boolean">
+            <scope name="zil.value.boolean">
                 <expression>T|&lt;&gt;</expression>
             </scope>
 
-            <include syntax="self" collection="zil.form" />
+            <include syntax="self" collection="forms" />
 
-            <include syntax="self" collection="zil.list" />
+            <include syntax="self" collection="lists" />
         </collection>
 
         <!-- First element of a Form or List -->
         <collection name="zil.first-element">
-            <scope name="zil.first-element.atom">
-                <expression>([A-Z=][A-Z0-9-=?]+)</expression>
-                <capture number="1" name="zil.identifier.method" />
+            <scope name="zil.first-element.identifier.function">
+                <expression>[A-Z0-9-=?+]+</expression>
             </scope>
         </collection>
 
         <!-- Forms -->
-        <collection name="zil.form">
-            <scope name="zil.tag.form">
+        <collection name="forms">
+            <scope name="zil.definition.function">
                 <starts-with>
                     <expression>(&lt;)</expression>
                     <capture number="1" name="zil.bracket" />
@@ -126,14 +113,14 @@
                     <capture number="1" name="zil.bracket" />
                 </ends-with>
                 <subscopes anchored="true">
-                    <include syntax="self" collection="zil.first-element" />
-                    <include syntax="self" collection="zil.elements" optional="true" repeat="true" />
+                    <include syntax="self" collection="zil.first-element" optional="true" />
+                    <include syntax="self" collection="elements" optional="true" repeat="true" />
                 </subscopes>
             </scope>
         </collection>
 
         <!-- Lists -->
-        <collection name="zil.list">
+        <collection name="lists">
             <scope name="zil.tag.list">
                 <starts-with>
                     <expression>\(</expression>
@@ -143,7 +130,7 @@
                 </ends-with>
                 <subscopes anchored="true">
                     <include syntax="self" collection="zil.first-element" optional="true" />
-                    <include syntax="self" collection="zil.elements" optional="true" repeat="true" />
+                    <include syntax="self" collection="elements" optional="true" repeat="true" />
                 </subscopes>
             </scope>
         </collection>
