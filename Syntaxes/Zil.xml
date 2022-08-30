@@ -35,7 +35,6 @@
     </surrounding-pairs>
 
     <scopes>
-        <!-- Comments -->
         <scope name="zil.comment" spell-check="true">
             <starts-with>
                 <expression>;?&quot;</expression>
@@ -45,7 +44,12 @@
             </ends-with>
         </scope>
 
-        <!-- Forms -->
+        <include syntax="self" collection="globals" />
+
+        <include syntax="self" collection="objects" />
+
+        <include syntax="self" collection="routines" />
+
         <include syntax="self" collection="forms" />
     </scopes>
 
@@ -95,8 +99,8 @@
         </collection>
 
         <!-- First element of a Form or List -->
-        <collection name="zil.first-element">
-            <scope name="zil.first-element.identifier.function">
+        <collection name="first-element">
+            <scope name="zil.identifier.function">
                 <expression>[A-Z0-9-=?+]+</expression>
             </scope>
         </collection>
@@ -113,7 +117,7 @@
                     <capture number="1" name="zil.bracket" />
                 </ends-with>
                 <subscopes anchored="true">
-                    <include syntax="self" collection="zil.first-element" optional="true" />
+                    <include syntax="self" collection="first-element" optional="true" />
                     <include syntax="self" collection="elements" optional="true" repeat="true" />
                 </subscopes>
             </scope>
@@ -129,8 +133,59 @@
                     <expression>\)</expression>
                 </ends-with>
                 <subscopes anchored="true">
-                    <include syntax="self" collection="zil.first-element" optional="true" />
+                    <include syntax="self" collection="first-element" optional="true" />
                     <include syntax="self" collection="elements" optional="true" repeat="true" />
+                </subscopes>
+            </scope>
+        </collection>
+
+        <!-- Globals and Constants -->
+        <collection name="globals">
+            <scope name="zil.definition.global">
+                <starts-with>
+                    <expression>&lt;(CONSTANT|GLOBAL)\s([A-Z0-9-=?+]+)</expression>
+                    <capture number="1" name="zil.keyword" />
+                    <capture number="2" name="zil.identifier.global" />
+                </starts-with>
+                <ends-with>
+                    <expression>&gt;</expression>
+                </ends-with>
+                <subscopes>
+                    <include syntax="self" collection="elements" />
+                </subscopes>
+            </scope>
+        </collection>
+
+        <!-- Object and Room definitions -->
+        <collection name="objects">
+            <scope name="zil.definition.class">
+                <starts-with>
+                    <expression>&lt;(OBJECT|ROOM)\s([A-Z0-9-=?+]+)</expression>
+                    <capture number="1" name="zil.keyword.construct" />
+                    <capture number="2" name="zil.identifier.type.class" />
+                </starts-with>
+                <ends-with>
+                    <expression>&gt;</expression>
+                </ends-with>
+                <subscopes>
+                    <include syntax="self" collection="elements" />
+                </subscopes>
+            </scope>
+        </collection>
+
+        <!-- Routines -->
+        <collection name="routines">
+            <scope name="zil.definition.method">
+                <starts-with>
+                    <expression>&lt;(ROUTINE)\s([A-Z0-9-=?+]+)</expression>
+                    <capture number="1" name="zil.keyword.construct" />
+                    <capture number="2" name="zil.identifier.type.class" />
+                </starts-with>
+                <ends-with>
+                    <expression>&gt;</expression>
+                </ends-with>
+                <subscopes>
+                    <include syntax="self" collection="elements" />
                 </subscopes>
             </scope>
         </collection>
