@@ -66,7 +66,7 @@
                     <expression>&quot;</expression>
                 </starts-with>
                 <ends-with>
-                    <expression>[^\\]&quot;</expression>
+                    <expression>^&quot;|[^\\]&quot;</expression>
                 </ends-with>
             </scope>
 
