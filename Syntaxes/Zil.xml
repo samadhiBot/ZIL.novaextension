@@ -37,12 +37,14 @@
     <scopes>
         <scope name="zil.comment" spell-check="true">
             <starts-with>
-                <expression>;?&quot;</expression>
+                <expression>^&quot;|[^\\]&quot;</expression>
             </starts-with>
             <ends-with>
                 <expression>&quot;</expression>
             </ends-with>
         </scope>
+
+        <include syntax="self" collection="comments" />
 
         <include syntax="self" collection="globals" />
 
@@ -54,6 +56,27 @@
     </scopes>
 
     <collections>
+        <!-- Comments -->
+        <collection name="comments">
+            <scope name="zil.quoted.comment" spell-check="true">
+                <starts-with>
+                    <expression>;&quot;</expression>
+                </starts-with>
+                <ends-with>
+                    <expression>&quot;</expression>
+                </ends-with>
+            </scope>
+
+            <scope name="zil.bracketed.comment" spell-check="true">
+                <starts-with>
+                    <expression>;&lt;</expression>
+                </starts-with>
+                <ends-with>
+                    <expression>&gt;</expression>
+                </ends-with>
+            </scope>
+        </collection>
+
         <!-- Elements -->
         <collection name="elements">
             <scope name="zil.value.number">
@@ -61,9 +84,11 @@
                 <capture number="1" name="zil.value.number" />
             </scope>
 
-            <scope name="zil.comment" spell-check="true">
-                <expression>;&quot;[^&quot;]*&quot;</expression>
+            <scope name="zil.empty.string">
+                <expression>&quot;&quot;</expression>
             </scope>
+
+            <include syntax="self" collection="comments" />
 
             <scope name="zil.string" spell-check="true">
                 <starts-with>
